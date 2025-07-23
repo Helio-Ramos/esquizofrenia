@@ -1,0 +1,207 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="tet">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Esquizofrenia - Informasaun ne’ebé loos kona ba esquizofrenia no saude mental husi Hélio de C. R. da Silva.">
+    <meta name="keywords" content="esquizofrenia, saude mental, psikologia, tratamentu, Timor-Leste">
+    <meta name="author" content="Hélio de C. R. da Silva">
+    <title>Esquizofrenia</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            color: #333;
+        }
+        header {
+            background-color: #007BFF;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+        nav a {
+            color: white;
+            margin: 0 1rem;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        section {
+            margin-bottom: 2rem;
+        }
+        h2 {
+            color: #007BFF;
+        }
+        form div {
+            margin-bottom: 1rem;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background-color: #f8f8f8;
+        }
+        .pdf-section {
+            text-align: center;
+        }
+        .pdf-section a {
+            display: inline-block;
+            margin: 1rem;
+            padding: 0.5rem 1rem;
+            background-color: #28a745;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        .pdf-section a:hover {
+            background-color: #218838;
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 1rem;
+            }
+            nav a {
+                display: block;
+                margin: 0.5rem 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Esquizofrenia</h1>
+        <nav>
+            <a href="#home">Uma</a>
+            <a href="#articles">Artigu</a>
+            <a href="#book">Livru</a>
+            <a href="#about">Kona-ba</a>
+            <a href="#contact">Kontaktu</a>
+        </nav>
+    </header>
+
+    <section id="home">
+        <div class="container">
+            <h2>Komprende Esquizofrenia</h2>
+            <p>Esquizofrenia iha sentidu rua ne’ebe mai husi lian Grego; Sxizo katak naksalak, haketak ba/husi (split into/from) no Phren katak neon (mind). Esquizofrenia hanesan psiko desorientadu ne’ebe haketak individu nia neon husi individu nia hanoin; no halo individu esperiensia transformasaun husi realidade ne’ebe normal ba realidade ne’ebe la normal.</p>
+        </div>
+    </section>
+
+    <section id="articles">
+        <div class="container">
+            <h2>Artigu</h2>
+            <p>Iha artigu ne’e, ha’u esplora kona ba mundu esquizofrenia. Iha tempo ne’ebe hanesan, ha’u mos hakarak promove saude mental no tratamentu pragmatiku balu ba leitor hotu ne’ebe asesu ona ha’u nia hanoin sira iha livrinho refere. Sei diak liu, ita preciza konsulta ho profesionalismu sira antes aplika tratamentu ruma.</p>
+        </div>
+    </section>
+
+    <section id="book">
+        <div class="container">
+            <h2>Introdusaun Badak</h2>
+            <p>'Transformasaun husi hahalok ne’ebe normal ba hahalok ne’ebe la normal’ mak sei sai hanesan pontu importante ida mai ha’u atu halibur data empirikal ne’ebe bele esplika kona ba esquizofrenia. Iha parte seluk, ha’u konsiente katak John Haslam nia hanoin precisa promove tan aspeitu balu ne’ebe util hodi bele koresponde ba psikologia kontemporariu. Ho ida ne’e, ha’u aumenta aspeitu ‘NATUREZA’ hodi kompleta ka apar deit ho saida mak Haslam dehan tiha ona iha tinan 1809.</p>
+            <div class="pdf-section">
+                <a href="ESQUIZOFRENIA.pdf" download>Download Livru (Grátis)</a>
+                <a href="ESQUIZOFRENIA.pdf" target="_blank">Hare Livru</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="about">
+        <div class="container">
+            <h2>Kona-ba</h2>
+            <p>Website simples ida ne’e, ha’u sei uza ho intensaun ne’ebe di’ak atu fahe hanoin balu kona ba rikusoin Psikologia nian. Ha’u nia objetivu principal mak ne’e: ‘ha’u bele oferese informasaun ne’ebé loos, badak no klaru kona ba Esquizofrenia’ hanesan mekanismu ne’ebe bele tulun individu sai advokasia ida ba hapara stigma no discriminasaun hasoru ema ne’ebe ho mental deficiencia. (Apriende atu hatene; no hatene hodi transforma.) Au mesmu tempo, ha’u espera katak informasaun ne’ebe leitor sira asesu sei tulun leitor sira atu sai individu ne’ebe produtivu, autentiku iha hanoin no liafuan; no sei tulun leitor sira atu foti desizaun ne’ebe nakonu ho prosperidade. Sente livre atu kontaktu autor via email: heliodecarvalhoramos@gmail.com ka via telephone: +670 7785 4087.</p>
+        </div>
+    </section>
+
+    <section id="contact">
+        <div class="container">
+            <h2>Kontaktu</h2>
+            <form action="https://formspree.io/f/xkgzjqel" method="POST">
+                <div>
+                    <label for="name">Naran</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div>
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div>
+                    <label for="message">Mensajen</label>
+                    <textarea id="message" name="message" required></textarea>
+                </div>
+                <button type="submit">Fó Mensajen</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2025 Esquizofrenia. Direitu hotu rezervadu.</p>
+    </footer>
+</body>
+</html>
